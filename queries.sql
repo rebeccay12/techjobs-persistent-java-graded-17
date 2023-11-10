@@ -1,4 +1,5 @@
 --Part 1
+DROP TABLE job;
 
 --Part 2
 

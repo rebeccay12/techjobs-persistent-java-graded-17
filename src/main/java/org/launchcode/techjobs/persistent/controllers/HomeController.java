@@ -3,7 +3,10 @@ package org.launchcode.techjobs.persistent.controllers;
 import jakarta.validation.Valid;
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
+import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.launchcode.techjobs.persistent.models.data.JobRepository;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +24,14 @@ import java.util.Optional;
 public class HomeController {
 
     private final EmployerRepository employerRepository;
+    private final SkillRepository skillRepository;
+    private final JobRepository jobRepository;
+
     @Autowired
-    public HomeController(EmployerRepository employerRepository) {
+    public HomeController(EmployerRepository employerRepository, SkillRepository skillRepository, JobRepository jobRepository) {
         this.employerRepository = employerRepository;
+        this.skillRepository = skillRepository;
+        this.jobRepository = jobRepository;
     }
     @RequestMapping("/")
     public String index(Model model) {
@@ -37,24 +45,56 @@ public class HomeController {
     public String displayAddJobForm(Model model) {
 	model.addAttribute("title", "Add Job");
         model.addAttribute(new Job());
+        model.addAttribute("skills", skillRepository.findAll());
         return "add";
     }
 
-    @PostMapping("add")
-    public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                       Errors errors, Model model, @RequestParam int employerId) {
+//    @PostMapping("add")
+//    public String processAddJobForm(@ModelAttribute @Valid Job newJob,
+//                                       Errors errors, Model model, @RequestParam int employerId) {
+//
+//        if (errors.hasErrors()) {
+//            model.addAttribute("title", "Add Job");
+//            return "add";
+//        }
+//
+//        Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
+//
+//        if (optionalEmployer.isPresent()) {
+//            Employer selectedEmployer = optionalEmployer.get();
+//            newJob.setEmployer(selectedEmployer);
+//
+//            return "redirect:";
+//        } else {
+//            return "add";
+//        }
+//    }
 
-        if (errors.hasErrors()) {
-	    model.addAttribute("title", "Add Job");
-            return "add";
+    @PostMapping("add")
+    public String processAddJobForm(@ModelAttribute @Valid Job newJob, Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
+        if (!skills.isEmpty()) {
+            List<Skill> skillObjs = skillRepository.findByIdIn(skills);
+            newJob.setSkills(skillObjs);
         }
+
 
         Optional<Employer> optionalEmployer = employerRepository.findById(employerId);
 
         if (optionalEmployer.isPresent()) {
             Employer selectedEmployer = optionalEmployer.get();
             newJob.setEmployer(selectedEmployer);
-        return "redirect:";
+
+            if (!skills.isEmpty()) {
+                List<Skill> skillObjs = skillRepository.findByIdIn(skills); // Use the correct method here
+                newJob.setSkills(skillObjs);
+            }
+
+           //save the job
+            jobRepository.save(newJob);
+            return "redirect:";
+        } else {
+            return "add";
+        }
     }
 
     @GetMapping("view/{jobId}")

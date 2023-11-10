@@ -18,7 +18,14 @@ import java.util.Optional;
 @RequestMapping("employers")
 public class EmployerController {
 
+    //what should I initialize this as? Should it stay as null?
     private final EmployerRepository employerRepository;
+
+    @Autowired
+    public EmployerController(EmployerRepository employerRepository) {
+        this.employerRepository = employerRepository;
+    }
+
 
     @GetMapping("/employers")
     public String listEmployers(Model model) {
@@ -30,10 +37,6 @@ public class EmployerController {
     }
 
 
-    @Autowired
-    public EmployerController(EmployerRepository employerRepository) {
-        this.employerRepository = employerRepository;
-    }
 
     @GetMapping("add")
     public String displayAddEmployerForm(Model model) {
