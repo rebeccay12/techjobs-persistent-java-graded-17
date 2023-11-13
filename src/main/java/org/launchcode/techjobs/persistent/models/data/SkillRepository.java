@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SkillRepository extends CrudRepository<Skill, Integer> {
-    List<Skill> findByIdIn(List<Integer> ids);
+//    List<Skill> findByIdIn(List<Integer> ids);
 }

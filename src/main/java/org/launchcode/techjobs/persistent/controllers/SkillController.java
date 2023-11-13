@@ -19,23 +19,24 @@ import java.util.Optional;
 @RequestMapping("skills")
 public class SkillController {
 
+        @Autowired
+        private SkillRepository skillRepository;
 
-        private final SkillRepository skillRepository;
-
-        @GetMapping("/skills")
+        @GetMapping
+        @RequestMapping("/")
         public String listSkills(Model model) {
-            Iterable<Skill> skillsIterable = skillRepository.findAll();
-            List<Skill> skills = new ArrayList<>();
-            skillsIterable.forEach(skills::add);
+            Iterable<Skill> skills = skillRepository.findAll();
+//            List<Skill> skills = new ArrayList<>();
+//            skillsIterable.forEach(skills::add);
             model.addAttribute("skills", skills);
             return "skills/index";
         }
 
 
-        @Autowired
-        public SkillController(SkillRepository skillRepository) {
-            this.skillRepository = skillRepository;
-        }
+//        @Autowired
+//        public SkillController(SkillRepository skillRepository) {
+//            this.skillRepository = skillRepository;
+//        }
 
         @GetMapping("add")
         public String displayAddSkillForm(Model model) {
@@ -44,27 +45,26 @@ public class SkillController {
         }
 
         @PostMapping("add")
-        public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
-                                             Errors errors, Model model) {
+        public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill, Errors errors, Model model) {
 
             if (errors.hasErrors()) {
                 return "skills/add";
             }
 
-
+            skillRepository.save(newSkill);
             return "redirect:";
         }
 
         @GetMapping("view/{skillId}")
         public String displayViewSkill(Model model, @PathVariable int skillId) {
-            Optional<Skill> optSkill = skillRepository.findById(skillId);
+            Optional<Skill> optionalSkill = skillRepository.findById(skillId);
 
-            if (optSkill.isPresent()) {
-                Skill skill = optSkill.get();
+            if (optionalSkill.isPresent()) {
+                Skill skill = optionalSkill.get();
                 model.addAttribute("skill", skill);
                 return "skills/view";
             } else {
-                return "redirect:";
+                return "redirect:../";
             }
         }
 

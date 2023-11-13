@@ -15,6 +15,7 @@ public class Job extends AbstractEntity {
 
 //    private String name;
     @ManyToOne
+    @JoinColumn(name = "employer_id")
     private Employer employer;
 //    private String skills;
 
@@ -26,17 +27,17 @@ public class Job extends AbstractEntity {
     )
 
     //list or arraylist?
-    private List<Skill> skills = new ArrayList<>();
+    private List<Skill> skills;
 
 
     public Job() {
     }
 
     // Initialize the id and value fields.
-    public Job(Employer employer, List<Skill> someSkills) {
+    public Job(Employer anEmployer, List<Skill> skills) {
         super();
-        this.employer = employer;
-        this.skills = someSkills;
+        this.employer = anEmployer;
+        this.skills = skills;
     }
 
     // Getters and setters.
@@ -70,6 +71,7 @@ public class Job extends AbstractEntity {
 //        this.skills = skills;
 //    }
     public void setSkills(List<Skill> skills) {
+
         this.skills = skills;
     }
 

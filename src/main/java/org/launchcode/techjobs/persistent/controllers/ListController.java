@@ -26,7 +26,9 @@ public class ListController {
 
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
     private EmployerRepository employerRepository;
+    @Autowired
     private SkillRepository skillRepository;
 
     static HashMap<String, String> columnChoices = new HashMap<>();
@@ -39,13 +41,14 @@ public class ListController {
 
     }
 
-    @GetMapping("list")
-    public String listJobs(Model model) {
-        Iterable<Job> jobs = jobRepository.findAll();
+    @RequestMapping("")
+    //list or list jobs in the public string model?
+    public String list (Model model) {
+//        Iterable<Job> jobs = jobRepository.findAll();
         Iterable<Employer> employers = employerRepository.findAll();
         Iterable<Skill> skills = skillRepository.findAll();
 
-        model.addAttribute("jobs", jobs);
+//        model.addAttribute("jobs", jobs);
         model.addAttribute("employers", employers);
         model.addAttribute("skills", skills);
 
@@ -53,11 +56,11 @@ public class ListController {
     }
 
 
-    @RequestMapping("")
-    public String list(Model model) {
-
-        return "list";
-    }
+//    @RequestMapping("")
+//    public String list(Model model) {
+//
+//        return "list";
+//    }
 
     @RequestMapping(value = "jobs")
     public String listJobsByColumnAndValue(Model model, @RequestParam String column, @RequestParam String value) {

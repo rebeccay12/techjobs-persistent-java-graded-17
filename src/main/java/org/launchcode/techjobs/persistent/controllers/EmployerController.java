@@ -19,19 +19,19 @@ import java.util.Optional;
 public class EmployerController {
 
     //what should I initialize this as? Should it stay as null?
-    private final EmployerRepository employerRepository;
-
     @Autowired
-    public EmployerController(EmployerRepository employerRepository) {
-        this.employerRepository = employerRepository;
-    }
+    private EmployerRepository employerRepository;
+
+//    @Autowired
+//    public EmployerController(EmployerRepository employerRepository) {
+//        this.employerRepository = employerRepository;
+//    }
 
 
-    @GetMapping("/employers")
-    public String listEmployers(Model model) {
-        Iterable<Employer> employersIterable = employerRepository.findAll();
-        List<Employer> employers = new ArrayList<>();
-        employersIterable.forEach(employers::add);
+    @GetMapping
+    @RequestMapping("/")
+    public String index (Model model) {
+        Iterable<Employer> employers = employerRepository.findAll();
         model.addAttribute("employers", employers);
         return "employers/index";
     }
@@ -51,14 +51,15 @@ public class EmployerController {
         if (errors.hasErrors()) {
             return "employers/add";
         }
+        employerRepository.save(newEmployer);
 
         return "redirect:";
     }
 
     @GetMapping("view/{employerId}")
     public String displayViewEmployer(Model model, @PathVariable int employerId) {
-
-        Optional optEmployer = null;
+        //find employer id
+        Optional <Employer> optEmployer = employerRepository.findById(employerId);
         if (optEmployer.isPresent()) {
             Employer employer = (Employer) optEmployer.get();
             model.addAttribute("employer", employer);

@@ -7,17 +7,23 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Skill extends AbstractEntity {
-    @NotBlank(message = "Description cannot be empty")
-    @Size(min = 1, max = 500, message = "Description must be between 1 and 500 characters")
+//    @NotBlank(message = "Description cannot be empty")
+    @Size(max = 255)
     private String description;
 
     @ManyToMany(mappedBy = "skills")
-    private ArrayList<Job> jobs;
+    private List<Job> jobs = new ArrayList<>();
+
+    public Skill () {
+
+    }
 
     public String getDescription() {
+
         return description;
     }
 
@@ -25,11 +31,13 @@ public class Skill extends AbstractEntity {
         this.description = description;
     }
 
-    public ArrayList<Job> getJobs() {
+    public List<Job> getJobs() {
+
         return jobs;
     }
 
-    public void setJobs(ArrayList<Job> jobs) {
+    public void setJobs(List<Job> jobs) {
+
         this.jobs = jobs;
     }
 }

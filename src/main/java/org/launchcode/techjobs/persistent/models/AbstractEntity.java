@@ -20,14 +20,18 @@ public abstract class AbstractEntity {
     @Size(min = 1, max = 255)
     private String name;
 
-    public int getId() {return id;}
+    public int getId() {
+        return id;}
 
-    public String getName() {return name;}
+    public String getName() {
+        return name;}
 
-    public void setName(String name) {this.name = name;}
+    public void setName(String name) {
+        this.name = name;}
 
     @Override
     public String toString() {
+
         return name;
     }
 
@@ -41,6 +45,7 @@ public abstract class AbstractEntity {
 
     @Override
     public int hashCode() {
+
         return Objects.hash(id);
     }
 
